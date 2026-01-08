@@ -94,20 +94,31 @@ export interface ComponentAppealCombination {
 
 /**
  * Market Insight (C1) スキーマ定義
- * 構造の読み取り：ペルソナの前提 → 競合の選択 → その合理性（仮説）
+ * 構造の読み取り：4要素必須
  */
 export interface MarketInsight {
-  // ペルソナの前提（仮説）
-  persona_assumption: string; // ペルソナが持っている前提・期待（仮説）
-  // 競合の選択（事実 + 根拠）
-  competitor_choice: {
-    choice: string; // 競合が選択している表現・要素
+  // 1. 想定されているペルソナ前提（人の不安・制約）（仮説）
+  persona_assumption: {
+    assumption: string; // ペルソナが持っている前提・不安・制約（仮説）
     evidence: string; // 根拠（出現率、要素の多寡など）
   };
-  // その合理性（仮説）
+  // 2. 観測された競合の選択（事実 + 根拠）
+  competitor_choice: {
+    choice: string; // 競合が選択している表現・要素（事実）
+    evidence: string; // 根拠（出現率、要素の多寡など）
+    bbox_references?: Array<{ banner_id: string; bbox: { x: number; y: number; w: number; h: number } }>; // BBox参照（任意）
+  };
+  // 3. なぜその選択が合理的か（仮説）
   rationality_hypothesis: string; // なぜその選択が合理的か（仮説）
+  // 4. 当たり前になっている可能性（外すとリスク）（仮説）
+  taken_for_granted_risk: string; // 当たり前になっている可能性、外すとリスク（仮説）
   supporting_banners: string[]; // 根拠となるバナーID
   category: 'high_frequency' | 'low_frequency' | 'combination' | 'brand_difference';
+  // バナー/LP企画に使うための問い（Planning Hooks）
+  planning_hooks: Array<{
+    question: string; // 企画に使える問い
+    context: string; // 背景・文脈
+  }>;
 }
 
 /**

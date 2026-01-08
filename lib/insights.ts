@@ -2,7 +2,7 @@ import { Aggregation, Extraction, MarketInsight, StrategyOption, PlanningHook } 
 
 /**
  * Market Insight (C1) 生成
- * 構造の読み取り：ペルソナの前提 → 競合の選択 → その合理性（仮説）
+ * 構造の読み取り：4要素必須
  */
 export function generateMarketInsights(
   aggregation: Aggregation,
@@ -18,15 +18,48 @@ export function generateMarketInsights(
         .filter((e) => e.components.some((c) => c.type === cf.type))
         .map((e) => e.banner_id);
 
+      // BBox参照を取得
+      const bboxReferences = extractions
+        .filter((e) => e.components.some((c) => c.type === cf.type))
+        .flatMap((e) =>
+          e.components
+            .filter((c) => c.type === cf.type)
+            .map((c) => ({
+              banner_id: e.banner_id,
+              bbox: c.bbox,
+            }))
+        )
+        .slice(0, 3); // 最大3件まで
+
       insights.push({
-        persona_assumption: `ペルソナは${cf.type}の存在を前提として期待している可能性がある`,
-        competitor_choice: {
-          choice: `${cf.type}を使用`,
+        // 1. 想定されているペルソナ前提（人の不安・制約）
+        persona_assumption: {
+          assumption: `ペルソナは${cf.type}がないと不安を感じる、または${cf.type}の存在を前提として期待している可能性がある`,
           evidence: `${cf.percentage}%のバナーで使用（${cf.count}件）`,
         },
-        rationality_hypothesis: `ペルソナの期待に応えるため、${cf.type}を含める選択が合理的である可能性がある`,
+        // 2. 観測された競合の選択（事実 + 根拠）
+        competitor_choice: {
+          choice: `${cf.type}を使用している`,
+          evidence: `${cf.percentage}%のバナーで使用（${cf.count}件）`,
+          bbox_references: bboxReferences.length > 0 ? bboxReferences : undefined,
+        },
+        // 3. なぜその選択が合理的か（仮説）
+        rationality_hypothesis: `ペルソナの期待や不安に応えるため、${cf.type}を含める選択が合理的である可能性がある`,
+        // 4. 当たり前になっている可能性（外すとリスク）
+        taken_for_granted_risk: `${cf.type}は当たり前になっている可能性があり、外すとペルソナの期待に応えられず、離脱リスクが高まる可能性がある`,
         supporting_banners: supportingBanners,
         category: 'high_frequency',
+        // バナー/LP企画に使うための問い
+        planning_hooks: [
+          {
+            question: `${cf.type}を外す場合、ペルソナのどの不安・期待にどう応えるか？`,
+            context: `${cf.type}は${cf.percentage}%のバナーで使用されている。外す場合の代替手段を検討する必要がある`,
+          },
+          {
+            question: `${cf.type}を含める場合、どの位置・サイズで配置すべきか？`,
+            context: `市場で一般的な配置パターンを参考にしつつ、自社の差別化ポイントを考慮する`,
+          },
+        ],
       });
     });
 
@@ -38,15 +71,48 @@ export function generateMarketInsights(
         .filter((e) => e.appeal_axes.some((a) => a.type === af.type))
         .map((e) => e.banner_id);
 
+      // BBox参照を取得
+      const bboxReferences = extractions
+        .filter((e) => e.appeal_axes.some((a) => a.type === af.type))
+        .flatMap((e) =>
+          e.appeal_axes
+            .filter((a) => a.type === af.type)
+            .map((a) => ({
+              banner_id: e.banner_id,
+              bbox: a.bbox,
+            }))
+        )
+        .slice(0, 3); // 最大3件まで
+
       insights.push({
-        persona_assumption: `ペルソナは${af.type}訴求を重視している可能性がある`,
-        competitor_choice: {
-          choice: `${af.type}訴求を採用`,
+        // 1. 想定されているペルソナ前提（人の不安・制約）
+        persona_assumption: {
+          assumption: `ペルソナは${af.type}訴求を重視している、または${af.type}がないと判断できない可能性がある`,
           evidence: `${af.percentage}%のバナーで使用（${af.count}件）`,
         },
-        rationality_hypothesis: `ペルソナの重視ポイントに合わせるため、${af.type}訴求を選択している可能性がある`,
+        // 2. 観測された競合の選択（事実 + 根拠）
+        competitor_choice: {
+          choice: `${af.type}訴求を採用している`,
+          evidence: `${af.percentage}%のバナーで使用（${af.count}件）`,
+          bbox_references: bboxReferences.length > 0 ? bboxReferences : undefined,
+        },
+        // 3. なぜその選択が合理的か（仮説）
+        rationality_hypothesis: `ペルソナの重視ポイントや判断基準に合わせるため、${af.type}訴求を選択している可能性がある`,
+        // 4. 当たり前になっている可能性（外すとリスク）
+        taken_for_granted_risk: `${af.type}訴求は当たり前になっている可能性があり、外すとペルソナの判断材料が不足し、離脱リスクが高まる可能性がある`,
         supporting_banners: supportingBanners,
         category: 'high_frequency',
+        // バナー/LP企画に使うための問い
+        planning_hooks: [
+          {
+            question: `${af.type}訴求を外す場合、ペルソナの判断基準にどう応えるか？`,
+            context: `${af.type}訴求は${af.percentage}%のバナーで使用されている。外す場合の代替手段を検討する必要がある`,
+          },
+          {
+            question: `${af.type}訴求を伝える場合、どの表現・テキストが最も効果的か？`,
+            context: `市場で一般的な表現パターンを参考にしつつ、自社の独自性をどう打ち出すか`,
+          },
+        ],
       });
     });
 
@@ -59,14 +125,33 @@ export function generateMarketInsights(
         .map((e) => e.banner_id);
 
       insights.push({
-        persona_assumption: `ペルソナは${cf.type}に対して否定的、または無関心である可能性がある`,
-        competitor_choice: {
-          choice: `${cf.type}を避ける`,
+        // 1. 想定されているペルソナ前提（人の不安・制約）
+        persona_assumption: {
+          assumption: `ペルソナは${cf.type}に対して否定的、無関心、または不要と感じている可能性がある`,
           evidence: `${cf.percentage}%のバナーのみ使用（${cf.count}件）`,
         },
-        rationality_hypothesis: `ペルソナの反応を避けるため、${cf.type}を使わない選択が合理的である可能性がある`,
+        // 2. 観測された競合の選択（事実 + 根拠）
+        competitor_choice: {
+          choice: `${cf.type}を避けている`,
+          evidence: `${cf.percentage}%のバナーのみ使用（${cf.count}件）`,
+        },
+        // 3. なぜその選択が合理的か（仮説）
+        rationality_hypothesis: `ペルソナの反応を避ける、または不要と判断するため、${cf.type}を使わない選択が合理的である可能性がある`,
+        // 4. 当たり前になっている可能性（外すとリスク）
+        taken_for_granted_risk: `${cf.type}を避けることが当たり前になっている可能性があり、使うとペルソナの反発や混乱を招くリスクがある可能性がある`,
         supporting_banners: supportingBanners,
         category: 'low_frequency',
+        // バナー/LP企画に使うための問い
+        planning_hooks: [
+          {
+            question: `${cf.type}を使う場合、ペルソナの反発をどう回避するか？`,
+            context: `${cf.type}は${cf.percentage}%のバナーのみ使用されている。使う場合の説明・文脈を検討する必要がある`,
+          },
+          {
+            question: `${cf.type}を避ける場合、その機能をどう代替するか？`,
+            context: `市場で避けられている要素だが、自社の差別化のために使う可能性を検討する`,
+          },
+        ],
       });
     });
 
@@ -75,14 +160,33 @@ export function generateMarketInsights(
     .filter((combo) => combo.percentage >= 50)
     .forEach((combo) => {
       insights.push({
-        persona_assumption: `ペルソナは特定の要素と訴求の組み合わせを期待している可能性がある`,
-        competitor_choice: {
-          choice: `${combo.components.join(' + ')} と ${combo.appeal_axes.join(' + ')} を組み合わせ`,
+        // 1. 想定されているペルソナ前提（人の不安・制約）
+        persona_assumption: {
+          assumption: `ペルソナは特定の要素と訴求の組み合わせを期待している、または組み合わせがないと判断できない可能性がある`,
           evidence: `${combo.percentage}%のバナーで組み合わせ使用（${combo.count}件）`,
         },
+        // 2. 観測された競合の選択（事実 + 根拠）
+        competitor_choice: {
+          choice: `${combo.components.join(' + ')} と ${combo.appeal_axes.join(' + ')} を組み合わせている`,
+          evidence: `${combo.percentage}%のバナーで組み合わせ使用（${combo.count}件）`,
+        },
+        // 3. なぜその選択が合理的か（仮説）
         rationality_hypothesis: `ペルソナの期待する組み合わせに合わせるため、このセットで使用する選択が合理的である可能性がある`,
+        // 4. 当たり前になっている可能性（外すとリスク）
+        taken_for_granted_risk: `この組み合わせは当たり前になっている可能性があり、片方だけではペルソナの期待に応えられず、離脱リスクが高まる可能性がある`,
         supporting_banners: combo.banner_ids,
         category: 'combination',
+        // バナー/LP企画に使うための問い
+        planning_hooks: [
+          {
+            question: `この組み合わせを外す場合、ペルソナの期待にどう応えるか？`,
+            context: `${combo.components.join(' + ')} と ${combo.appeal_axes.join(' + ')} は${combo.percentage}%のバナーで組み合わせ使用されている。外す場合の代替手段を検討する必要がある`,
+          },
+          {
+            question: `この組み合わせを使う場合、どの順序・配置で提示すべきか？`,
+            context: `市場で一般的な組み合わせパターンを参考にしつつ、自社の差別化ポイントをどう打ち出すか`,
+          },
+        ],
       });
     });
 
@@ -95,14 +199,33 @@ export function generateMarketInsights(
           .map((e) => e.banner_id);
 
         insights.push({
-          persona_assumption: `${bd.brand}のターゲットペルソナは、他のブランドとは異なる前提を持っている可能性がある`,
+          // 1. 想定されているペルソナ前提（人の不安・制約）
+          persona_assumption: {
+            assumption: `${bd.brand}のターゲットペルソナは、他のブランドとは異なる前提・不安・制約を持っている可能性がある`,
+            evidence: `${bd.brand}のみの特徴`,
+          },
+          // 2. 観測された競合の選択（事実 + 根拠）
           competitor_choice: {
             choice: diff.detail,
             evidence: `${bd.brand}のみの特徴`,
           },
+          // 3. なぜその選択が合理的か（仮説）
           rationality_hypothesis: `${bd.brand}は独自のペルソナ理解に基づき、異なる構成を選択している可能性がある`,
+          // 4. 当たり前になっている可能性（外すとリスク）
+          taken_for_granted_risk: `${bd.brand}の選択は、そのペルソナ層では当たり前になっている可能性があり、他のブランドと同じ構成では期待に応えられないリスクがある可能性がある`,
           supporting_banners: supportingBanners,
           category: 'brand_difference',
+          // バナー/LP企画に使うための問い
+          planning_hooks: [
+            {
+              question: `${bd.brand}の選択を参考にする場合、自社のペルソナとの違いをどう考慮するか？`,
+              context: `${bd.brand}は独自の構成を採用している。自社のペルソナに合わせてどう調整すべきか`,
+            },
+            {
+              question: `${bd.brand}と異なる選択をする場合、ペルソナにどう説明するか？`,
+              context: `市場の一般的な選択と異なる場合、ペルソナの理解をどう得るか`,
+            },
+          ],
         });
       });
     });
