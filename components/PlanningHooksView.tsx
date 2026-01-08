@@ -37,9 +37,9 @@ export default function PlanningHooksView({ hooks }: PlanningHooksViewProps) {
                   key={hookIdx}
                   className={`border-l-4 pl-4 py-3 ${getOptionColor(hook.strategy_option)}`}
                 >
-                  {/* 質問（考えるフック） */}
+                  {/* 問い（企画に使える） */}
                   <div className="mb-2">
-                    <div className="text-sm font-medium text-gray-600 mb-1">【考えるフック】</div>
+                    <div className="text-sm font-medium text-gray-600 mb-1">【企画に使える問い】</div>
                     <div className="text-base font-semibold text-gray-900">{h.question}</div>
                   </div>
 
@@ -48,6 +48,16 @@ export default function PlanningHooksView({ hooks }: PlanningHooksViewProps) {
                     <div>
                       <div className="text-sm font-medium text-gray-600 mb-1">【背景・文脈】</div>
                       <div className="text-sm text-gray-700">{h.context}</div>
+                    </div>
+                  )}
+
+                  {/* 関連する市場インサイト */}
+                  {h.related_insights && h.related_insights.length > 0 && (
+                    <div>
+                      <div className="text-xs font-medium text-gray-500 mb-1">関連する市場インサイト</div>
+                      <div className="text-xs text-gray-600">
+                        {h.related_insights.length}件のインサイトと関連
+                      </div>
                     </div>
                   )}
                 </div>

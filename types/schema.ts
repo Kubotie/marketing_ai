@@ -36,6 +36,10 @@ export interface Extraction {
   tone: string | null; // トーン（断定せず候補として。根拠が弱ければnull）
   notes: string; // 事実のみ（推測や断定を含まない）
   confidence: number; // 根拠量にもとづく説明可能なルール（0.0-1.0）
+  // 構造の読み取り：この表現が選ばれている理由（仮説）
+  selected_reason_hypothesis: string | null; // この表現が選ばれている理由（仮説）
+  // 構造の読み取り：避けている表現（仮説）
+  avoided_expressions_hypothesis: string | null; // 避けている表現（仮説）
 }
 
 /**
@@ -90,11 +94,18 @@ export interface ComponentAppealCombination {
 
 /**
  * Market Insight (C1) スキーマ定義
- * 市場で共有されている前提・当たり前を抽出
+ * 構造の読み取り：ペルソナの前提 → 競合の選択 → その合理性（仮説）
  */
 export interface MarketInsight {
-  fact: string; // 観測された事実（Bの数値・分布）
-  hypothesis: string; // そこから言える市場の前提（仮説表現）
+  // ペルソナの前提（仮説）
+  persona_assumption: string; // ペルソナが持っている前提・期待（仮説）
+  // 競合の選択（事実 + 根拠）
+  competitor_choice: {
+    choice: string; // 競合が選択している表現・要素
+    evidence: string; // 根拠（出現率、要素の多寡など）
+  };
+  // その合理性（仮説）
+  rationality_hypothesis: string; // なぜその選択が合理的か（仮説）
   supporting_banners: string[]; // 根拠となるバナーID
   category: 'high_frequency' | 'low_frequency' | 'combination' | 'brand_difference';
 }
@@ -121,13 +132,14 @@ export interface StrategyOption {
 
 /**
  * Planning Hook (D) スキーマ定義
- * 企画への接続：思考の起点
+ * 企画への接続：バナー/LP企画に使える"問い"
  */
 export interface PlanningHook {
   strategy_option: 'A' | 'B' | 'C';
   hooks: Array<{
-    question: string; // 考えるフック（質問形式）
-    context: string; // 背景・文脈
+    question: string; // バナー/LP企画に使える問い
+    context: string; // 背景・文脈（市場インサイトや競合の選択から）
+    related_insights?: string[]; // 関連する市場インサイトのID（任意）
   }>;
 }
 

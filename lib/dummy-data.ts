@@ -72,6 +72,27 @@ export function generateDummyExtraction(bannerId: string, imageUrl: string): Ext
 
   const pattern = patterns[patternIndex];
 
+  // 構造の読み取り：選ばれている理由と避けている表現の仮説を生成
+  const selectedReasonHypothesis = (() => {
+    if (patternIndex === 0) {
+      return '価格訴求と期間限定の組み合わせは、ペルソナの「お得感」への期待に応えるため選択されている可能性がある';
+    } else if (patternIndex === 1) {
+      return '効果訴求と社会的証明の組み合わせは、ペルソナの「信頼性」への期待に応えるため選択されている可能性がある';
+    } else {
+      return '安心訴求と時短訴求の組み合わせは、ペルソナの「リスク回避」への期待に応えるため選択されている可能性がある';
+    }
+  })();
+
+  const avoidedExpressionsHypothesis = (() => {
+    if (patternIndex === 0) {
+      return '社会的証明やレビュー要素を避けている可能性がある。価格訴求に集中するため、他の訴求を削減している';
+    } else if (patternIndex === 1) {
+      return '価格表示や期間限定要素を避けている可能性がある。効果訴求に集中するため、価格訴求を削減している';
+    } else {
+      return '期間限定や割引要素を避けている可能性がある。安心訴求に集中するため、緊急性を削減している';
+    }
+  })();
+
   return {
     banner_id: bannerId,
     brand: brands[brandIndex] || null,
@@ -82,6 +103,8 @@ export function generateDummyExtraction(bannerId: string, imageUrl: string): Ext
     tone: pattern.tone,
     notes: pattern.notes,
     confidence: 0.85,
+    selected_reason_hypothesis: selectedReasonHypothesis,
+    avoided_expressions_hypothesis: avoidedExpressionsHypothesis,
   };
 }
 
@@ -149,7 +172,7 @@ export function generateFullInsights(
 ) {
   const marketInsights = generateMarketInsights(aggregation, extractions);
   const strategyOptions = generateStrategyOptions(marketInsights, aggregation, personaInfo);
-  const planningHooks = generatePlanningHooks(strategyOptions);
+  const planningHooks = generatePlanningHooks(strategyOptions, marketInsights);
 
   return {
     marketInsights,

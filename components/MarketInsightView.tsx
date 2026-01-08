@@ -72,16 +72,27 @@ export default function MarketInsightView({
                 </span>
               </div>
 
-              {/* 事実 */}
-              <div className="mb-2">
-                <div className="text-xs font-medium text-gray-600 mb-1">【観測された事実】</div>
-                <div className="text-sm text-gray-800">{insight.fact}</div>
+              {/* ペルソナの前提 */}
+              <div className="mb-3">
+                <div className="text-xs font-medium text-gray-600 mb-1">【1. ペルソナの前提（仮説）】</div>
+                <div className="text-sm text-gray-800">{insight.persona_assumption}</div>
               </div>
 
-              {/* 仮説 */}
+              {/* 競合の選択 */}
+              <div className="mb-3">
+                <div className="text-xs font-medium text-gray-600 mb-1">【2. 競合の選択（事実 + 根拠）】</div>
+                <div className="text-sm text-gray-800 mb-1">
+                  <span className="font-medium">{insight.competitor_choice.choice}</span>
+                </div>
+                <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
+                  根拠: {insight.competitor_choice.evidence}
+                </div>
+              </div>
+
+              {/* その合理性 */}
               <div>
-                <div className="text-xs font-medium text-gray-600 mb-1">【市場の前提（仮説）】</div>
-                <div className="text-sm font-medium text-blue-700">{insight.hypothesis}</div>
+                <div className="text-xs font-medium text-gray-600 mb-1">【3. その合理性（仮説）】</div>
+                <div className="text-sm font-medium text-blue-700">{insight.rationality_hypothesis}</div>
               </div>
 
               {/* クリックヒント */}

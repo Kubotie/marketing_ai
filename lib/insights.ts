@@ -2,7 +2,7 @@ import { Aggregation, Extraction, MarketInsight, StrategyOption, PlanningHook } 
 
 /**
  * Market Insight (C1) 生成
- * Bの結果を入力として、「市場で共有されている前提・当たり前」を抽出
+ * 構造の読み取り：ペルソナの前提 → 競合の選択 → その合理性（仮説）
  */
 export function generateMarketInsights(
   aggregation: Aggregation,
@@ -10,7 +10,7 @@ export function generateMarketInsights(
 ): MarketInsight[] {
   const insights: MarketInsight[] = [];
 
-  // 高頻度要素から「説明しなくても伝わる前提」を抽出
+  // 高頻度要素から構造を読み取る
   aggregation.component_frequencies
     .filter((cf) => cf.percentage >= 70)
     .forEach((cf) => {
@@ -19,14 +19,18 @@ export function generateMarketInsights(
         .map((e) => e.banner_id);
 
       insights.push({
-        fact: `${cf.type}が${cf.percentage}%のバナーで使用されている`,
-        hypothesis: `${cf.type}は"説明しなくても伝わる前提"になっている可能性がある`,
+        persona_assumption: `ペルソナは${cf.type}の存在を前提として期待している可能性がある`,
+        competitor_choice: {
+          choice: `${cf.type}を使用`,
+          evidence: `${cf.percentage}%のバナーで使用（${cf.count}件）`,
+        },
+        rationality_hypothesis: `ペルソナの期待に応えるため、${cf.type}を含める選択が合理的である可能性がある`,
         supporting_banners: supportingBanners,
         category: 'high_frequency',
       });
     });
 
-  // 高頻度訴求軸から市場の前提を抽出
+  // 高頻度訴求軸から構造を読み取る
   aggregation.appeal_axis_frequencies
     .filter((af) => af.percentage >= 70)
     .forEach((af) => {
@@ -35,14 +39,18 @@ export function generateMarketInsights(
         .map((e) => e.banner_id);
 
       insights.push({
-        fact: `${af.type}訴求が${af.percentage}%のバナーで使用されている`,
-        hypothesis: `${af.type}訴求は市場の"当たり前"になっている可能性がある`,
+        persona_assumption: `ペルソナは${af.type}訴求を重視している可能性がある`,
+        competitor_choice: {
+          choice: `${af.type}訴求を採用`,
+          evidence: `${af.percentage}%のバナーで使用（${af.count}件）`,
+        },
+        rationality_hypothesis: `ペルソナの重視ポイントに合わせるため、${af.type}訴求を選択している可能性がある`,
         supporting_banners: supportingBanners,
         category: 'high_frequency',
       });
     });
 
-  // 低頻度要素から「避ける傾向」を抽出
+  // 低頻度要素から構造を読み取る
   aggregation.component_frequencies
     .filter((cf) => cf.percentage <= 20 && cf.count >= 2)
     .forEach((cf) => {
@@ -51,26 +59,34 @@ export function generateMarketInsights(
         .map((e) => e.banner_id);
 
       insights.push({
-        fact: `${cf.type}が${cf.percentage}%のバナーでのみ使用されている`,
-        hypothesis: `${cf.type}を避ける傾向が見られる可能性がある`,
+        persona_assumption: `ペルソナは${cf.type}に対して否定的、または無関心である可能性がある`,
+        competitor_choice: {
+          choice: `${cf.type}を避ける`,
+          evidence: `${cf.percentage}%のバナーのみ使用（${cf.count}件）`,
+        },
+        rationality_hypothesis: `ペルソナの反応を避けるため、${cf.type}を使わない選択が合理的である可能性がある`,
         supporting_banners: supportingBanners,
         category: 'low_frequency',
       });
     });
 
-  // よくある組み合わせから「セットで使われる前提」を抽出
+  // よくある組み合わせから構造を読み取る
   aggregation.component_appeal_combinations
     .filter((combo) => combo.percentage >= 50)
     .forEach((combo) => {
       insights.push({
-        fact: `${combo.components.join(' + ')} と ${combo.appeal_axes.join(' + ')} が${combo.percentage}%のバナーで組み合わせて使用されている`,
-        hypothesis: `これらの要素は"セットで使われる前提"になっている可能性がある`,
+        persona_assumption: `ペルソナは特定の要素と訴求の組み合わせを期待している可能性がある`,
+        competitor_choice: {
+          choice: `${combo.components.join(' + ')} と ${combo.appeal_axes.join(' + ')} を組み合わせ`,
+          evidence: `${combo.percentage}%のバナーで組み合わせ使用（${combo.count}件）`,
+        },
+        rationality_hypothesis: `ペルソナの期待する組み合わせに合わせるため、このセットで使用する選択が合理的である可能性がある`,
         supporting_banners: combo.banner_ids,
         category: 'combination',
       });
     });
 
-  // ブランド別差分から「ブランドによる違い」を抽出
+  // ブランド別差分から構造を読み取る
   if (aggregation.brand_differences) {
     aggregation.brand_differences.forEach((bd) => {
       bd.differences.forEach((diff) => {
@@ -79,8 +95,12 @@ export function generateMarketInsights(
           .map((e) => e.banner_id);
 
         insights.push({
-          fact: diff.detail,
-          hypothesis: `${bd.brand}は他のブランドと異なる構成を採用している可能性がある`,
+          persona_assumption: `${bd.brand}のターゲットペルソナは、他のブランドとは異なる前提を持っている可能性がある`,
+          competitor_choice: {
+            choice: diff.detail,
+            evidence: `${bd.brand}のみの特徴`,
+          },
+          rationality_hypothesis: `${bd.brand}は独自のペルソナ理解に基づき、異なる構成を選択している可能性がある`,
           supporting_banners: supportingBanners,
           category: 'brand_difference',
         });
@@ -191,45 +211,66 @@ export function generateStrategyOptions(
 
 /**
  * Planning Hooks (D) 生成
- * 各Strategy Optionから、バナー/LP企画のための「考えるフック」を生成
+ * 各Strategy Optionから、バナー/LP企画に使える"問い"を生成
  */
 export function generatePlanningHooks(
-  strategyOptions: StrategyOption[]
+  strategyOptions: StrategyOption[],
+  marketInsights: MarketInsight[]
 ): PlanningHook[] {
   return strategyOptions.map((option) => {
     const hooks: PlanningHook['hooks'] = [];
 
-    // FV（ファーストビュー）で何を一番に伝えるか
-    if (option.referenced_elements.appeal_axes && option.referenced_elements.appeal_axes.length > 0) {
+    // Option A: 市場に同調する場合の問い
+    if (option.option_type === 'A') {
       hooks.push({
-        question: 'このOptionを取るなら、FVで何を一番に伝えるか',
-        context: `参考にする訴求軸: ${option.referenced_elements.appeal_axes.join(', ')}`,
+        question: '市場の期待に応えるため、FVで何を最初に伝えるべきか？',
+        context: `参考にする訴求軸: ${option.referenced_elements.appeal_axes?.join(', ') || 'なし'}。市場で高頻度の訴求軸を採用する場合、ペルソナが最初に期待する情報は何か`,
+        related_insights: marketInsights
+          .filter((mi) => mi.category === 'high_frequency')
+          .map((_, idx) => `insight-${idx}`),
+      });
+
+      hooks.push({
+        question: '市場で説明不要とされている要素は何か？それ以外はどう説明すべきか？',
+        context: `参考にする要素: ${option.referenced_elements.components?.join(', ') || 'なし'}。市場で高頻度の要素は説明不要の可能性があるが、それ以外は説明が必要かもしれない`,
+        related_insights: marketInsights
+          .filter((mi) => mi.category === 'high_frequency')
+          .map((_, idx) => `insight-${idx}`),
       });
     }
 
-    // 説明不要 vs 説明が必要な要素
-    if (option.referenced_elements.components && option.referenced_elements.components.length > 0) {
+    // Option B: 部分的にずらす場合の問い
+    if (option.option_type === 'B') {
       hooks.push({
-        question: 'どの要素は説明不要で、どこは説明が必要か',
-        context: `参考にする要素: ${option.referenced_elements.components.join(', ')}。これらの要素が市場でどの程度理解されているかを考慮する`,
+        question: '市場の前提を維持しつつ、どこで差別化を打ち出すか？',
+        context: `参考にする要素: ${option.referenced_elements.components?.join(', ') || 'なし'}。使わない要素: ${option.avoided_elements.components?.join(', ') || 'なし'}。市場の期待を満たしつつ、独自性を示すポイントはどこか`,
+      });
+
+      hooks.push({
+        question: '市場の期待と異なる部分を、どう説明すれば誤解を避けられるか？',
+        context: `使わない要素: ${option.avoided_elements.components?.join(', ') || 'なし'}。市場で一般的な要素を使わない場合、ペルソナがどう感じるか、どう説明すれば納得してもらえるか`,
       });
     }
 
-    // 誤解されやすいポイント
-    if (option.avoided_elements.components && option.avoided_elements.components.length > 0) {
+    // Option C: あえて外す場合の問い
+    if (option.option_type === 'C') {
       hooks.push({
-        question: '誤解されやすいポイントは何か',
-        context: `使わない要素: ${option.avoided_elements.components.join(', ')}。市場の期待と異なる場合、どのような誤解が生じる可能性があるか`,
+        question: '市場の期待を外すことで、どのような新しい価値を提示できるか？',
+        context: `参考にする要素: ${option.referenced_elements.components?.join(', ') || 'なし'}。使わない要素: ${option.avoided_elements.components?.join(', ') || 'なし'}。市場の前提から外れることで、どんな新しいメッセージを伝えられるか`,
+      });
+
+      hooks.push({
+        question: '市場の期待と異なる表現を選ぶ場合、ペルソナにどう理解してもらうか？',
+        context: `使わない要素: ${option.avoided_elements.components?.join(', ') || 'なし'}。市場で一般的な要素を避ける場合、ペルソナが混乱しないよう、どう説明・表現すべきか`,
       });
     }
 
-    // ペルソナとの整合性
-    if (option.target_persona) {
-      hooks.push({
-        question: 'このOptionはペルソナの期待にどう応えるか',
-        context: `想定ペルソナ: ${option.target_persona}`,
-      });
-    }
+    // 共通の問い
+    hooks.push({
+      question: 'このOptionを選ぶ場合、ペルソナのどの前提・期待に応え、どこで独自性を示すか？',
+      context: `想定ペルソナ: ${option.target_persona || '未設定'}。市場の前提と自社の独自性のバランスをどう取るか`,
+      related_insights: marketInsights.map((_, idx) => `insight-${idx}`),
+    });
 
     return {
       strategy_option: option.option_type,

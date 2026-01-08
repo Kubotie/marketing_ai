@@ -152,6 +152,26 @@ export default function AnalysisResult({
         </div>
       </div>
 
+      {/* 構造の読み取り：選ばれている理由 */}
+      {extraction.selected_reason_hypothesis && (
+        <div>
+          <h3 className="text-lg font-semibold mb-3">この表現が選ばれている理由（仮説）</h3>
+          <div className="bg-white rounded-lg border p-4 border-purple-300">
+            <p className="text-sm text-purple-700">{extraction.selected_reason_hypothesis}</p>
+          </div>
+        </div>
+      )}
+
+      {/* 構造の読み取り：避けている表現 */}
+      {extraction.avoided_expressions_hypothesis && (
+        <div>
+          <h3 className="text-lg font-semibold mb-3">避けている表現（仮説）</h3>
+          <div className="bg-white rounded-lg border p-4 border-orange-300">
+            <p className="text-sm text-orange-700">{extraction.avoided_expressions_hypothesis}</p>
+          </div>
+        </div>
+      )}
+
       {/* 備考 */}
       {extraction.notes && (
         <div>
