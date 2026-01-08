@@ -130,3 +130,26 @@ export interface PlanningHook {
     context: string; // 背景・文脈
   }>;
 }
+
+/**
+ * Insights (C) スキーマ定義（後方互換性のため）
+ * ※「勝てる」等の断定は禁止
+ */
+export interface Overlap {
+  aspect: string; // "components" | "appeal_axes" | "tone" 等
+  item: string; // 被っている項目
+  frequency: number; // 出現回数
+  percentage: number; // 出現率
+  note: string; // 事実ベースの説明（断定表現なし）
+}
+
+export interface DifferentiationOpportunity {
+  aspect: string; // 観点
+  missing_or_rare_items: string[]; // 存在しない/少ない要素（事実として）
+  note: string; // 事実ベースの説明（断定表現なし）
+}
+
+export interface Insights {
+  overlaps: Overlap[]; // 被り（よくある構成）
+  differentiation_opportunities: DifferentiationOpportunity[]; // 差別化余地
+}
