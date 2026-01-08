@@ -36,40 +36,40 @@ export default function StrategyOptionsView({ options }: StrategyOptionsViewProp
             </div>
 
             {/* 参考にしている競合要素 */}
-            {(option.referenced_elements.components?.length ||
-              option.referenced_elements.appeal_axes?.length) && (
+            {((option.referenced_elements.components?.length ?? 0) > 0 ||
+              (option.referenced_elements.appeal_axes?.length ?? 0) > 0) && (
               <div className="mb-4 p-3 bg-white rounded border">
                 <div className="text-sm font-medium text-gray-700 mb-2">
                   参考にしている競合要素
                 </div>
-                {option.referenced_elements.components?.length > 0 && (
+                {(option.referenced_elements.components?.length ?? 0) > 0 && (
                   <div className="text-sm text-gray-600 mb-1">
-                    要素: {option.referenced_elements.components.join(', ')}
+                    要素: {option.referenced_elements.components!.join(', ')}
                   </div>
                 )}
-                {option.referenced_elements.appeal_axes?.length > 0 && (
+                {(option.referenced_elements.appeal_axes?.length ?? 0) > 0 && (
                   <div className="text-sm text-gray-600">
-                    訴求軸: {option.referenced_elements.appeal_axes.join(', ')}
+                    訴求軸: {option.referenced_elements.appeal_axes!.join(', ')}
                   </div>
                 )}
               </div>
             )}
 
             {/* あえて使わない要素 */}
-            {(option.avoided_elements.components?.length ||
-              option.avoided_elements.appeal_axes?.length) && (
+            {((option.avoided_elements.components?.length ?? 0) > 0 ||
+              (option.avoided_elements.appeal_axes?.length ?? 0) > 0) && (
               <div className="mb-4 p-3 bg-white rounded border">
                 <div className="text-sm font-medium text-gray-700 mb-2">
                   あえて使わない要素
                 </div>
-                {option.avoided_elements.components?.length > 0 && (
+                {(option.avoided_elements.components?.length ?? 0) > 0 && (
                   <div className="text-sm text-gray-600 mb-1">
-                    要素: {option.avoided_elements.components.join(', ')}
+                    要素: {option.avoided_elements.components!.join(', ')}
                   </div>
                 )}
-                {option.avoided_elements.appeal_axes?.length > 0 && (
+                {(option.avoided_elements.appeal_axes?.length ?? 0) > 0 && (
                   <div className="text-sm text-gray-600">
-                    訴求軸: {option.avoided_elements.appeal_axes.join(', ')}
+                    訴求軸: {option.avoided_elements.appeal_axes!.join(', ')}
                   </div>
                 )}
               </div>
