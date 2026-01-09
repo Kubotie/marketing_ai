@@ -117,10 +117,10 @@ export async function callOpenRouterJSON<T>(
     const jsonMatch = response.match(/```json\s*([\s\S]*?)\s*```/) || response.match(/```\s*([\s\S]*?)\s*```/);
     const jsonString = jsonMatch ? jsonMatch[1] : response;
     
-    return JSON.parse(jsonString.trim()) as T;
-  } catch (error) {
-    console.error('JSON parse error:', error);
-    console.log('Response:', response');
-    throw new Error(`Failed to parse JSON response: ${error instanceof Error ? error.message : String(error)}`);
-  }
+      return JSON.parse(jsonString.trim()) as T;
+    } catch (error) {
+      console.error('JSON parse error:', error);
+      console.log('Response:', response);
+      throw new Error(`Failed to parse JSON response: ${error instanceof Error ? error.message : String(error)}`);
+    }
 }
