@@ -45,8 +45,7 @@ ${JSON.stringify(activeProduct ? {
 } : null, null, 2)}
 
 ## 3. ペルソナ情報
-${JSON.stringify(personaRefs.length > 0 ? personaRefs.map((p: any) => ({
-  summary: p.summary,
+${JSON.stringify(personaRefs.length > 0 ? personaRefs.map((p: any) => ({  summary: p.summary,
   jtbd: p.jtbd,
   topCriteria: p.topCriteria,
 })) : null, null, 2)}
