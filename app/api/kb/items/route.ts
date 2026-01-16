@@ -111,7 +111,8 @@ export async function POST(request: NextRequest) {
     // 旧形式のInsightの場合、evidence_links.target_banner_idsが空でないことを確認
     // 注意: MarketInsight/StrategyOption/PlanningHookはmeta/payload構造を持つため、
     // このチェックは旧形式のInsightのみに適用される
-    if (validated.type === 'insight' && payloadValidation && typeof payloadValidation === 'object' && 'type' in payloadValidation && payloadValidation.type === 'insight') {
+    // 修正後（コピー用）
+if ((validated.type as string) === 'insight' && payloadValidation && typeof payloadValidation === 'object' && 'type' in payloadValidation && (payloadValidation as any).type === 'insight') {
       if (payloadValidation.evidence_links && payloadValidation.evidence_links.target_banner_ids.length === 0) {
         return NextResponse.json(
           { error: '根拠リンク（target_banner_ids）は必須です。Insightを保存するには、対象バナーIDを指定してください。' },
