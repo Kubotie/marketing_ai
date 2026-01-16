@@ -64,7 +64,8 @@ export async function PATCH(
       kbPayloadSchema.parse(validated.payload);
     }
 
-    const updated = await updateKBItem(kbId, validated);
+  // 修正後（コピー用）
+const updated = await updateKBItem(kbId, validated as any);
 
     if (!updated) {
       return NextResponse.json({ error: 'KB item not found' }, { status: 404 });
