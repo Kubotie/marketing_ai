@@ -113,8 +113,8 @@ export async function POST(request: NextRequest) {
     // このチェックは旧形式のInsightのみに適用される
     // 修正後（コピー用）
 if ((validated.type as string) === 'insight' && payloadValidation && typeof payloadValidation === 'object' && 'type' in payloadValidation && (payloadValidation as any).type === 'insight') {
-      if (payloadValidation.evidence_links && payloadValidation.evidence_links.target_banner_ids.length === 0) {
-        return NextResponse.json(
+  if ((payloadValidation as any).evidence_links && (payloadValidation as any).evidence_links.target_banner_ids.length === 0) {
+      return NextResponse.json(
           { error: '根拠リンク（target_banner_ids）は必須です。Insightを保存するには、対象バナーIDを指定してください。' },
           { status: 400 }
         );
