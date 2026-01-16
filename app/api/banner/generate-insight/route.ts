@@ -288,8 +288,8 @@ ${appealAxesList.join(', ') || 'なし'}
       console.log(`[generate-insight] ${currentStep} 完了`, {
         hasResult: !!result,
         hasMeta: !!(result as any)?.meta,
-        hasPayload: !!result?.payload,
-        insightsCount: result?.payload?.insights?.length || 0,
+        hasPayload: !!(result as any)?.payload,
+        insightsCount: (result as any)?.payload?.insights?.length || 0,
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
