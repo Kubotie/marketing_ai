@@ -148,12 +148,12 @@ ${JSON.stringify(personaRefs.length > 0 ? personaRefs.map((p: any) => ({  summar
     const resultWithMeta = {
       ...result,
       meta: {
-        kb_type: result.meta?.kb_type || 'planning_hook',
-        productId: result.meta?.productId ?? (activeProduct?.productId || null),
-        imageId: result.meta?.imageId ?? (bannerContext?.imageId || null),
-        generatedAt: result.meta?.generatedAt || new Date().toISOString(),
-        confidence: result.meta?.confidence ?? 0.5,
-      },
+    // 修正後（コピーして貼り付け）
+// 修正後（コピーして貼り付け）
+kb_type: (result as any).meta?.kb_type || 'planning_hook',
+productId: (result as any).meta?.productId ?? (activeProduct?.productId || null),
+imageId: (result as any).meta?.imageId ?? (bannerContext?.imageId || null),
+generatedAt: (result as any).meta?.generatedAt || new Date().toISOString(),      },
       payload: {
         ...result.payload,
         hooks: result.payload?.hooks || [],
