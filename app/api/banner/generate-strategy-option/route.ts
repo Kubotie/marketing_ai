@@ -42,11 +42,11 @@ ${JSON.stringify(activeProduct ? {
   name: activeProduct.name,
   category: activeProduct.category,
   description: activeProduct.description,
-  competitors: activeProduct.competitors?.map(c => c.name) || [],
+  competitors: activeProduct.competitors?.map((c: any) => c.name) || [],
 } : null, null, 2)}
 
 ## 3. ペルソナ情報
-${JSON.stringify(personaRefs.map(p => ({
+${JSON.stringify(personaRefs.map((p: any) => ({
   summary: p.summary,
   jtbd: p.jtbd,
   topCriteria: p.topCriteria,
@@ -131,12 +131,16 @@ ${JSON.stringify(personaRefs.map(p => ({
     const resultWithMeta = {
       ...result,
       meta: {
-        kb_type: result.meta?.kb_type || 'strategy_option',
-        productId: result.meta?.productId ?? (activeProduct?.productId || null),
-        imageId: result.meta?.imageId ?? (bannerContext?.imageId || null),
-        generatedAt: result.meta?.generatedAt || new Date().toISOString(),
-        confidence: result.meta?.confidence ?? 0.5,
-      },
+// 修正後（まとめてコピーして、該当箇所を上書きしてください）
+kb_type: (result as any).meta?.kb_type || 'strategy_option', // ← optionになっているか確認
+productId: (result as any).meta?.productId ?? (activeProduct?.productId || null),
+imageId: (result as any).meta?.imageId ?? (bannerContext?.imageId || null),
+generatedAt: (result as any).meta?.generatedAt || new Date().toISOString(),
+},
+payload: {
+...(result as any).payload,
+options: (result as any).payload?.options || [], // ← ここは options かもしれません（確認推奨）
+},
     };
 
     // Zod検証
