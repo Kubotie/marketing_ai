@@ -156,11 +156,11 @@ ${personaRefs.length > 0 ? JSON.stringify(personaRefs, null, 2) : 'なし'}
     const resultWithMeta = {
       ...result,
       meta: {
-        kb_type: result.meta?.kb_type || 'market_insight',
-        productId: result.meta?.productId ?? (productId || null),
-        imageId: result.meta?.imageId ?? (imageId || bannerContext?.imageId || null),
-        generatedAt: result.meta?.generatedAt || new Date().toISOString(),
-        confidence: result.meta?.confidence ?? 0.5,
+kb_type: (result as any).meta?.kb_type || 'market_insight',
+      productId: (result as any).meta?.productId ?? (productId || null),
+      imageId: (result as any).meta?.imageId ?? (imageId || bannerContext?.imageId || null),
+      generatedAt: (result as any).meta?.generatedAt || new Date().toISOString(),
+        confidence: (result as any).meta?.confidence ?? 0.5,
       },
     };
 
