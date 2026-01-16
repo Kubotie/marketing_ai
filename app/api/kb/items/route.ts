@@ -139,7 +139,7 @@ if ((validated.type as string) === 'insight' && payloadValidation && typeof payl
       source_refs: validated.source_refs,
       created_at: now,
       updated_at: now,
-      payload: validated.payload,
+      payload: validated.payload as any,
     };
 
     console.log('[API/KB] Creating KB item:', kbItem.kb_id, kbItem.type);
