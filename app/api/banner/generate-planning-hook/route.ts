@@ -154,10 +154,11 @@ kb_type: (result as any).meta?.kb_type || 'planning_hook',
 productId: (result as any).meta?.productId ?? (activeProduct?.productId || null),
 imageId: (result as any).meta?.imageId ?? (bannerContext?.imageId || null),
 generatedAt: (result as any).meta?.generatedAt || new Date().toISOString(),      },
-      payload: {
-        ...result.payload,
-        hooks: result.payload?.hooks || [],
-      },
+// 修正後（コピーして貼り付け）
+payload: {
+  ...(result as any).payload,
+  hooks: (result as any).payload?.hooks || [],
+},
     };
 
     // Zod検証
