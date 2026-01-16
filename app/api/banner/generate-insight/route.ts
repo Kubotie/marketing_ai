@@ -287,7 +287,7 @@ ${appealAxesList.join(', ') || 'なし'}
       );
       console.log(`[generate-insight] ${currentStep} 完了`, {
         hasResult: !!result,
-        hasMeta: !!result?.meta,
+        hasMeta: !!(result as any)?.meta,
         hasPayload: !!result?.payload,
         insightsCount: result?.payload?.insights?.length || 0,
       });
