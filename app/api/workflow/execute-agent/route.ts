@@ -1488,7 +1488,7 @@ ${parseError.message}
         payload: workflowRunPayload, // 正規化されたpayloadをそのまま保存
       };
       
-      await createKBItem(errorKbItem);
+      await createKBItem(errorKbItem as any);
       
       // エラー時の保存後verify
       const errorVerify = await getKBItem(runId);
