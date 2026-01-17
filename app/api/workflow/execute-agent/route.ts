@@ -1347,8 +1347,8 @@ ${parseError.message}
       payloadType: typeof verify?.payload,
       payloadKeys: verify?.payload ? Object.keys(verify.payload) : [],
       payloadTypeField: verify?.payload?.type,
-      verifyWorkflowId: verify?.payload?.workflowId,
-      verifyAgentNodeId: verify?.payload?.agentNodeId,
+      verifyWorkflowId: (verify?.payload as any)?.workflowId,
+      verifyAgentNodeId: (verify?.payload as any)?.agentNodeId,
       verifyKbId: verify?.kb_id,
     });
     
