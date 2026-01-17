@@ -390,10 +390,10 @@ export async function POST(request: NextRequest) {
           }
         } else if (inputKind === 'workflow_run_ref') {
           const { getKBItem } = await import('@/kb/db-server');
-          const { WorkflowRunPayload } = await import('@/kb/types');
+          // const { WorkflowRunPayload } ... ← 削除
           const runItem = await getKBItem(refId);
           if (runItem && runItem.type === 'workflow_run') {
-            const runPayload = runItem.payload as WorkflowRunPayload;
+            const runPayload = runItem.payload as any; // ← anyに変更
             const finalOutput = runPayload.finalOutput || runPayload.output;
             if (finalOutput) {
               if (!context.inputs) {
