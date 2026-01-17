@@ -44,7 +44,8 @@ function validateInputQuality(context: ExecutionContext): QualityCheckResult {
     missingInputs.push('目的・意図（intent）');
   } else {
     for (const packet of intentPackets) {
-      const intentPayload = packet.content as IntentPayload;
+      
+      const intentPayload = packet.content as any;
       if (!intentPayload.goal || intentPayload.goal.trim() === '') {
         warnings.push('目的・意図ノードの「目的（goal）」が空です。目的を入力することを推奨します。');
         missingInputs.push('目的（goal）');
