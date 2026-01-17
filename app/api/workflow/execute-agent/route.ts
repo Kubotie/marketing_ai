@@ -432,10 +432,10 @@ export async function POST(request: NextRequest) {
       
       if (selectedLpRunId) {
         const { getKBItem } = await import('@/kb/db-server');
-        const { WorkflowRunPayload } = await import('@/kb/types');
+        // const { WorkflowRunPayload } ... ← 削除
         const lpRunItem = await getKBItem(selectedLpRunId);
         if (lpRunItem) {
-          const runPayload = lpRunItem.payload as WorkflowRunPayload;
+          const runPayload = lpRunItem.payload as any; // ← anyに変更
           if (runPayload.output && runPayload.output.type === 'lp_structure') {
             context.lp_structure = {
               runId: selectedLpRunId,
