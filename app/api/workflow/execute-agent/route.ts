@@ -306,12 +306,13 @@ export async function POST(request: NextRequest) {
       console.groupEnd();
       
       // Orchestratorエージェントの場合、選択されたLP runからLP構成案を取得
-      if (selectedLpRunId) {
-        const { getKBItem } = await import('@/kb/db-server');
-        const { WorkflowRunPayload } = await import('@/kb/types');
-        const lpRunItem = await getKBItem(selectedLpRunId);
-        if (lpRunItem) {
-          const runPayload = lpRunItem.payload as WorkflowRunPayload;
+ // 修正後（コピーして、309行目の if文の中身を上書きしてください）
+ if (selectedLpRunId) {
+  const { getKBItem } = await import('@/kb/db-server');
+  // const { WorkflowRunPayload } ... ← この行は削除しました
+  const lpRunItem = await getKBItem(selectedLpRunId);
+  if (lpRunItem) {
+    const runPayload = lpRunItem.payload as any; // ← anyに変更
           if (runPayload.output && runPayload.output.type === 'lp_structure') {
             context.lp_structure = {
               runId: selectedLpRunId,
