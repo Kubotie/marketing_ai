@@ -5,7 +5,7 @@ import UnifiedLayout from '@/components/UnifiedLayout';
 import { useProductStore } from '@/store/useProductStore';
 import { getImageAssets, deleteImageAsset } from '@/lib/image-asset-db';
 import { ImageAsset } from '@/types/image-asset';
-import { Grid, List, Search } from 'lucide-react';
+import { Grid, List, Search, X } from 'lucide-react';
 
 export default function ImagesPage() {
   const { activeProduct, products } = useProductStore();
