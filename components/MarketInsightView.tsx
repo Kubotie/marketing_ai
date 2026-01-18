@@ -79,9 +79,9 @@ export default function MarketInsightView({
             const validated = InsightPayloadBaseSchema.safeParse(payload);
             
             if (validated.success) {
-              setAiInsights([validated.data]);
+              setAiInsights([validated.data as any]);
               if (onInsightsUpdate) {
-                onInsightsUpdate([validated.data]);
+                onInsightsUpdate([validated.data as any]);
               }
               console.log('[C1復元] KBから復元完了:', validated.data);
             } else {
