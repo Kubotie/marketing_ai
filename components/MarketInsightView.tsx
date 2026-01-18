@@ -448,7 +448,7 @@ if (onInsightsUpdate) {
                     <div className="mt-4 pt-4 border-t">
                       <div className="text-xs font-medium text-gray-600 mb-2">【根拠】</div>
                       <div className="space-y-1">
-                        {payload.evidence.map((ev, evIdx) => (
+                      {payload.evidence.map((ev: any, evIdx: number) => (
                           <div key={evIdx} className="text-xs text-gray-600">
                             {ev.type === 'bbox' && ev.bboxId && (
                               <>BBox: {ev.bboxId} - {ev.reason || ''}</>
