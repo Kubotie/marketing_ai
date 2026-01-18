@@ -309,7 +309,7 @@ export default function BannersPage() {
                         return source !== 'ocr' && !['price', 'cta', 'headline', 'body_text'].includes(c.type);
                       }),
                       ...ocrComponents.map((c) => ({ ...c, source: 'ocr' })),
-                    ],
+                    ]as any[],
                   },
                 };
               }
