@@ -67,7 +67,7 @@ export default function PlanningHooksView({
           
           const payload = latest.payload as PlanningHookPayload;
           // 新しい形式（meta/payload構造）に対応
-          if (payload.meta && payload.payload) {
+          if ((payload as any).meta && (payload as any).payload) {
             const validated = InsightPayloadBaseSchema.safeParse(payload);
             
             if (validated.success) {
