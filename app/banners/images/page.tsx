@@ -204,8 +204,7 @@ export default function BannersImagesPage() {
                     >
                       <div className="w-24 h-24 bg-gray-100 rounded overflow-hidden flex-shrink-0">
                         <img
-                          src={asset.storageRef || asset.imageUrl}
-                          alt={asset.title || '画像'}
+                          src={asset.storageRef || (asset as any).imageUrl} alt={asset.title || '画像'}
                           className="w-full h-full object-cover"
                         />
                       </div>
