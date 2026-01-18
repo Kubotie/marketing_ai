@@ -71,9 +71,9 @@ export default function PlanningHooksView({
             const validated = InsightPayloadBaseSchema.safeParse(payload);
             
             if (validated.success) {
-              setAiHooks([validated.data]);
+              setAiHooks([validated.data as any]);
               if (onHooksUpdate) {
-                onHooksUpdate([validated.data]);
+                onHooksUpdate([validated.data as any]);
               }
               console.log('[D復元] KBから復元完了:', validated.data);
             } else {
