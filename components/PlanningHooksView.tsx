@@ -162,10 +162,10 @@ export default function PlanningHooksView({
         throw new Error('生成結果の検証に失敗しました');
       }
 
-      setAiHooks([validated.data]);
+      setAiHooks([validated.data as any]);
       if (onHooksUpdate) {
-        onHooksUpdate([validated.data]);
-      }
+        onHooksUpdate([validated.data as any]);
+      }setAiHooks([validated.data]);
 
       // 自動保存
       try {
