@@ -489,7 +489,7 @@ export default function BannersPage() {
         
         // タブを復元
         if (history.currentTab !== activeTab) {
-          setActiveTab(history.currentTab);
+          setActiveTab(history.currentTab as any);
         }
       } catch (error) {
         console.error('履歴復元エラー:', error);
