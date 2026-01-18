@@ -325,7 +325,7 @@ if (onInsightsUpdate) {
                 {/* インサイト一覧 */}
                 {payload.insights.length > 0 && (
                   <div className="space-y-4 mt-4">
-                    {payload.insights.map((item, itemIdx) => (
+                    {payload.insights.map((item: any, itemIdx: number) => (
                       <div key={itemIdx} className="border-l-4 border-blue-500 pl-4 py-3 bg-blue-50 rounded">
                         <div className="text-sm font-semibold text-blue-900 mb-2">{item.title}</div>
                         <div className="text-xs text-blue-700 mb-2">{item.hypothesis}</div>
