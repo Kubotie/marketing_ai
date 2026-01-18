@@ -171,7 +171,7 @@ export default function BannersImagesPage() {
                     >
                       <div className="aspect-square bg-gray-100 rounded-t-lg overflow-hidden">
                         <img
-                          src={asset.storageRef || asset.imageUrl}
+                          src={asset.storageRef || (asset as any).imageUrl}
                           alt={asset.title || '画像'}
                           className="w-full h-full object-cover"
                         />
