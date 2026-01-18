@@ -508,7 +508,7 @@ export default function BannersPage() {
       try {
         const title = `履歴_${new Date().toLocaleDateString('ja-JP')}_${banners.length}件`;
         
-        const historyData: Omit<BannerHistory, 'historyId' | 'createdAt' | 'updatedAt'> = {
+        const historyData: any = {
           title,
           currentTab: activeTab,
           banners: banners.map(b => ({
