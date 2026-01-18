@@ -625,7 +625,7 @@ export default function BannerAnalyzerPage() {
       'planning',
       'summary',
     ];
-    const currentIndex = menuOrder.indexOf(activeTab);
+    const currentIndex = menuOrder.indexOf(activeTab as any);
     if (currentIndex < menuOrder.length - 1) {
       router.push(`/banner-analyzer?tab=${menuOrder[currentIndex + 1]}`);
     }
