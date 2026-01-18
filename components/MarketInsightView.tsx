@@ -305,7 +305,7 @@ if (onInsightsUpdate) {
           if (isNewFormat) {
             // 新形式の表示（meta/payload構造）
             const insightData = insight as MarketInsightPayload;
-            const { meta, payload } = insightData;
+            const { meta, payload } = insightData as any;
             
             return (
               <div
