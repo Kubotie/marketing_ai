@@ -254,7 +254,7 @@ export default function BannersImagesPage() {
                 </div>
                 <div className="mb-4">
                   <img
-                    src={selectedAsset.storageRef || selectedAsset.imageUrl}
+                    src={selectedAsset.storageRef || (selectedAsset as any).imageUrl}
                     alt={selectedAsset.title || '画像'}
                     className="w-full rounded-lg"
                   />
