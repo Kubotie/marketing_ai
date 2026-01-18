@@ -123,13 +123,13 @@ export default function PlanningHooksView({
         extraction,
         imageWidth,
         imageHeight,
-        activeProduct ? {
+        (activeProduct ? {
           productId: activeProduct.productId,
           name: activeProduct.name,
           category: activeProduct.category,
           description: activeProduct.description,
           competitors: activeProduct.competitors,
-        } : null,
+        } : null) as any,
         notes
       );
 
