@@ -165,10 +165,10 @@ export default function MarketInsightView({
         throw new Error('生成結果の検証に失敗しました');
       }
 
-      setAiInsights([validated.data]);
-      if (onInsightsUpdate) {
-        onInsightsUpdate([validated.data]);
-      }
+      setAiInsights([validated.data as any]);
+if (onInsightsUpdate) {
+  onInsightsUpdate([validated.data as any]);
+}
 
       // 自動保存
       try {
