@@ -39,7 +39,7 @@ export default function ArtifactsPage() {
       const runsWithMetadata = await listWorkflowRuns({
         includeAllStatuses: true,
         includeAllWorkflows: true, // すべてのワークフローの成果物を含める
-      });
+      }as any);
 
       // 各runに対してAgentDefinitionを取得し、hasOutputを判定
       const runsWithMetadataAndEval = await Promise.all(
