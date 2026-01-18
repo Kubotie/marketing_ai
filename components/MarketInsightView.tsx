@@ -172,7 +172,7 @@ if (onInsightsUpdate) {
 
       // 自動保存
       try {
-        await saveKbItem('market_insight', validated.data, {
+        await saveKbItem('market_insight', validated.data as any, {
           title: `市場インサイト_${new Date().toLocaleDateString('ja-JP')}`,
           imageId,
           productId,
