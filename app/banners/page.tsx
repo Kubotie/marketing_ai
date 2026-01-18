@@ -522,11 +522,11 @@ export default function BannersPage() {
           aggregation: aggregation || null,
           aiMarketInsights,
           aiStrategyOptions,
-          fullInsights: demoMode && demoFullData ? {
+          fullInsights: (demoMode && demoFullData ? {
             marketInsights: demoFullData.marketInsights || [],
             strategyOptions: demoFullData.strategyOptions || [],
             planningHooks: demoFullData.planningHooks || [],
-          } : null,
+          } : null) as any,
           strategyOptions: demoMode && demoFullData ? demoFullData.strategyOptions || null : null,
           planningHooks: demoMode && demoFullData ? demoFullData.planningHooks || null : null,
           bannerCount: banners.length,
