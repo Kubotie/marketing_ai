@@ -332,8 +332,8 @@ export default function PlanningHooksView({
   <div className="mt-4 pt-4 border-t">
     <div className="text-xs font-medium text-gray-600 mb-2">【企画案】</div>
     <div className="space-y-2">
-      {(payload as any).payload.insights.map((insight: any, idx: number) => (
-                        <div key={insightIdx} className="bg-blue-50 border border-blue-200 rounded p-3">
+    {(payload as any).payload.insights.map((insight: any, idx: number) => (
+  <div key={idx} className="bg-blue-50 border border-blue-200 rounded p-3">
                           <div className="text-sm font-semibold text-blue-900 mb-1">{insight.title}</div>
                           <div className="text-xs text-blue-700">{insight.hypothesis}</div>
                         </div>
