@@ -38,7 +38,8 @@ export default function WorkflowEditPanel() {
       product: '製品情報',
       persona: 'ペルソナ',
       knowledge: 'ナレッジ',
-    };
+      intent: 'インテント',
+   };
     
     const newNode: InputNode = {
       id: `input-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
