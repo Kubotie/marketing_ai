@@ -299,7 +299,7 @@ if (onOptionsUpdate) {
           if (isNewFormat) {
             // 新形式の表示（meta/payload構造）
             const optionData = option as StrategyOptionPayload;
-            const { meta, payload } = optionData;
+            const { meta, payload } = optionData as any;
             return (
               <div key={idx} className="border-2 rounded-lg p-6 bg-white">
                 <div className="flex items-center justify-between mb-4">
