@@ -378,7 +378,7 @@ if (onOptionsUpdate) {
                     <div className="mb-4">
                       <div className="text-xs font-medium text-gray-600 mb-2">【選ばれた理由】</div>
                       <div className="space-y-2">
-                        {payload.outputs.reasonsChosen.map((reason) => (
+                      {payload.outputs.reasonsChosen.map((reason: any) => (
                           <div key={reason.id} className="bg-blue-50 border border-blue-200 rounded p-3">
                             <div className="text-sm font-semibold text-blue-900 mb-1">{reason.label}</div>
                             <div className="text-xs text-blue-700">{reason.hypothesis}</div>
