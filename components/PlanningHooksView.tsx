@@ -165,7 +165,8 @@ export default function PlanningHooksView({
       setAiHooks([validated.data as any]);
       if (onHooksUpdate) {
         onHooksUpdate([validated.data as any]);
-      }setAiHooks([validated.data]);
+      }
+      setAiHooks([validated.data as any]);
 
       // 自動保存
       try {
