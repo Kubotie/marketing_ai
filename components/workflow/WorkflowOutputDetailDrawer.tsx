@@ -94,10 +94,10 @@ export default function WorkflowOutputDetailDrawer() {
 (runPayload as any).status === 'running' ? 'bg-blue-100 text-blue-700' :
                   'bg-gray-100 text-gray-700'
                 }`}>
-                  {runPayload.status === 'completed' ? '生成済' :
-                   runPayload.status === 'failed' ? '検証失敗' :
-                   runPayload.status === 'running' ? '生成中' :
-                   runPayload.status === 'error' ? 'エラー' : '入力不足'}
+                  {(runPayload as any).status === 'completed' ? '生成済' :
+ (runPayload as any).status === 'failed' ? '検証失敗' :
+ (runPayload as any).status === 'running' ? '生成中' :
+ (runPayload as any).status === 'error' ? 'エラー' : '入力不足'}
                 </span>
               )}
             </div>
