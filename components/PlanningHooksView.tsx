@@ -170,7 +170,7 @@ export default function PlanningHooksView({
 
       // 自動保存
       try {
-        await saveKbItem('planning_hook', validated.data, {
+        await saveKbItem('planning_hook', validated.data as any, {
           title: `企画フック_${new Date().toLocaleDateString('ja-JP')}`,
           imageId,
           productId,
