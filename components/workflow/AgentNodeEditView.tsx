@@ -830,7 +830,7 @@ export default function AgentNodeEditView({
                     data: {
                       ...agentNode.data,
                       executionLogs: [],
-                    },
+                    }as any,
                   });
                 }}
                 className="text-xs text-gray-400 hover:text-white"
