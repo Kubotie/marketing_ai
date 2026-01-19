@@ -393,7 +393,7 @@ if (onOptionsUpdate) {
                     <div className="mb-4">
                       <div className="text-xs font-medium text-gray-600 mb-2">【避けている表現】</div>
                       <div className="space-y-2">
-                        {payload.outputs.avoidedExpressions.map((avoided) => (
+                      {payload.outputs.avoidedExpressions.map((avoided: any) => (
                           <div key={avoided.id} className="bg-orange-50 border border-orange-200 rounded p-3">
                             <div className="text-sm font-semibold text-orange-900 mb-1">{avoided.label}</div>
                             <div className="text-xs text-orange-700">{avoided.hypothesis}</div>
