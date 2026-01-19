@@ -75,11 +75,12 @@ export default function StrategyOptionsView({
           if ((payload as any).meta && (payload as any).payload) {
             const validated = InsightPayloadBaseSchema.safeParse(payload);
             
-            if (validated.success) {
-              setAiOptions([validated.data]);
-              if (onOptionsUpdate) {
-                onOptionsUpdate([validated.data]);
-              }
+            // 修正後（コピー用）
+if (validated.success) {
+  setAiOptions([validated.data as any]);
+  if (onOptionsUpdate) {
+    onOptionsUpdate([validated.data as any]);
+  }
               console.log('[C2復元] KBから復元完了:', validated.data);
             } else {
               console.warn('[C2復元] Zod検証エラー:', validated.error);
