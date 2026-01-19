@@ -168,11 +168,11 @@ if (validated.success) {
         throw new Error('生成結果の検証に失敗しました');
       }
 
-      setAiOptions([validated.data]);
-      if (onOptionsUpdate) {
-        onOptionsUpdate([validated.data]);
-        console.log('[C2生成] onOptionsUpdate呼び出し:', validated.data);
-      } else {
+      setAiOptions([validated.data as any]);
+if (onOptionsUpdate) {
+  onOptionsUpdate([validated.data as any]);
+  console.log('[C2生成] onOptionsUpdate呼び出し:', validated.data);
+} else {
         console.warn('[C2生成] onOptionsUpdateが未定義');
       }
 
