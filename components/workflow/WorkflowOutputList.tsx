@@ -253,7 +253,7 @@ export default function WorkflowOutputList({ activeWorkflow, isActive = false }:
                 agentDefinition,
                 evalResult,
                 excluded: true, // 除外フラグ
-              });
+              }as any);
             }
           }
         }
