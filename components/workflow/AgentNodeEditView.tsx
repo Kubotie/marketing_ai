@@ -417,7 +417,7 @@ export default function AgentNodeEditView({
                       data: {
                         ...agentNode.data,
                         selectedLpRunId: lpRuns[0].id,
-                      },
+                      }as any,
                     });
                   }
                 }}
