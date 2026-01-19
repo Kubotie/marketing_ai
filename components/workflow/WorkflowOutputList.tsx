@@ -225,7 +225,7 @@ export default function WorkflowOutputList({ activeWorkflow, isActive = false }:
           if (inferredOutputKind === 'lp_structure' || inferredOutputKind === 'banner_structure') {
             workflowRuns.push({
               id: normalized.id,
-              title: normalized.title,
+              title: (normalized as any).title,
               payload: normalized.payload as any, // 念のためここもanyにしておくと安全です
               createdAt: normalized.createdAt,
               runItem: item,
