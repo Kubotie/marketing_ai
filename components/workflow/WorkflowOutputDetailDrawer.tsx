@@ -291,7 +291,7 @@ export default function WorkflowOutputDetailDrawer() {
                       <div>
                         <span className="font-medium text-gray-700">versionHash:</span>
                         <span className="ml-2 text-gray-600 font-mono">
-                          {runPayload.versionHash ? runPayload.versionHash.substring(0, 8) + '...' : 'N/A'}
+                        {(runPayload as any).versionHash ? (runPayload as any).versionHash.substring(0, 8) + '...' : 'N/A'}
                         </span>
                       </div>
                       <div>
