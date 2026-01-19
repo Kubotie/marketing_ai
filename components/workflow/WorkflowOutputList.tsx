@@ -225,16 +225,16 @@ export default function WorkflowOutputList({ activeWorkflow, isActive = false }:
           if (inferredOutputKind === 'lp_structure' || inferredOutputKind === 'banner_structure') {
             workflowRuns.push({
               id: normalized.id,
-              title: `${item.title || `Run ${normalized.id}`}${outputLabel ? ` [${outputLabel}]` : ''}`,
-              payload: outputPayload as LpStructurePayload | BannerStructurePayload,
-              createdAt: normalized.executedAt || normalized.finishedAt || normalized.startedAt || new Date().toISOString(),
+              title: normalized.title,
+              payload: normalized.payload as any, // 念のためここもanyにしておくと安全です
+              createdAt: normalized.createdAt,
               runItem: item,
               runPayload: normalized,
               type: inferredOutputKind as 'lp_structure' | 'banner_structure',
               pinned: currentPinnedRunIds.includes(normalized.id),
-              agentDefinition, // contract取得用に追加
-              evalResult, // フェーズ3-2: 除外理由表示用
-            });
+              agentDefinition,
+              evalResult,
+            } as any);
           }
         } else {
           // フェーズ3-2: 除外されたrunもデバッグ用に保持（showExclusionReasonsがtrueの場合のみ表示）
