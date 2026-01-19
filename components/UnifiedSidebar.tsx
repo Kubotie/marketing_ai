@@ -211,7 +211,7 @@ export default function UnifiedSidebar() {
                         <Lock className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0 ml-2" />
                       )}
                       {isActuallyLocked && canUnlock && (
-                        <Lock className="w-3.5 h-3.5 text-green-500 flex-shrink-0 ml-2" title="クリックして遷移できます" />
+                        <Lock className="w-3.5 h-3.5 text-green-500 flex-shrink-0 ml-2" />
                       )}
                     </button>
                   );
