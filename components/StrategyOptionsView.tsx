@@ -339,7 +339,7 @@ if (onOptionsUpdate) {
                           <div className="mt-2">
                             <div className="text-xs font-medium text-gray-600 mb-1">【根拠】</div>
                             <div className="space-y-1">
-                              {item.evidence.map((ev, evIdx) => (
+                            {item.evidence.map((ev: any, evIdx: number) => (
                                 <div key={evIdx} className="text-xs text-gray-700 bg-white rounded p-2 border">
                                   <span className="font-medium">{ev.bbox_type}</span>
                                   {ev.text && <span className="ml-2">"{ev.text}"</span>}
