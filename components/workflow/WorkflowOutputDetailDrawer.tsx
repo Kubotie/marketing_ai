@@ -57,6 +57,90 @@ export default function WorkflowOutputDetailDrawer() {
     }
   };
 
+// 修正後（コピー用）：loadRunDetailの後に追加
+
+  // --- アクションハンドラーの定義 ---
+  const onRegenerate = (id: string) => {
+    console.log('[WorkflowOutputDetailDrawer] Regenerate requested:', id);
+    alert('再生成機能は今後実装予定です');
+  };
+
+  const onExport = (id: string) => {
+    console.log('[WorkflowOutputDetailDrawer] Export requested:', id);
+  };
+
+  const onReuse = (runId: string) => {
+    // 再利用: workflow_run_refノードを追加
+    if (!activeWorkflow || !runItem || !runPayload) {
+      alert('ワークフローまたはデータが選択されていません');
+      return;
+    }
+
+    const agentName = runPayload.agentDefinitionId || runItem.title.split(' - ')[0];
+    const executedAt = new Date(runPayload.executedAt || runPayload.startedAt).toLocaleString('ja-JP');
+    const displayName = `${agentName} @ ${executedAt}`;
+
+    const newNode: InputNode = {
+      id: `input-run-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      type: 'input',
+      kind: 'knowledge',
+      label: displayName,
+      position: {
+        x: Math.random() * 300 + 50,
+        y: Math.random() * 300 + 50,
+      },
+      data: {
+        inputKind: 'workflow_run_ref',
+        refId: runId,
+        refKind: 'workflow_run',
+        title: displayName,
+      },
+      notes: `Run ID: ${runId}`,
+    };
+
+    addNode(newNode);
+    alert(`「${displayName}」をInputノードとして追加しました`);
+  };
+
+  const onCompare = (runId: string) => {
+    // 比較機能: 別のrunを選択して比較
+    const compareRunId = prompt('比較する実行結果のIDを入力してください（または空欄でキャンセル）:');
+    if (!compareRunId || compareRunId.trim() === '') {
+      return;
+    }
+
+    // 簡易実装: 2つのrunを取得して比較表示
+    Promise.all([
+      fetch(`/api/kb/items/${runId}`).then(r => r.json()),
+      fetch(`/api/kb/items/${compareRunId.trim()}`).then(r => r.json()),
+    ]).then(([run1Data, run2Data]) => {
+      const run1 = run1Data.item;
+      const run2 = run2Data.item;
+
+      // 比較結果を表示
+      const comparison = {
+        run1: {
+          id: run1.kb_id,
+          title: run1.title,
+          output: (run1.payload as any).finalOutput || (run1.payload as any).output,
+        },
+        run2: {
+          id: run2.kb_id,
+          title: run2.title,
+          output: (run2.payload as any).finalOutput || (run2.payload as any).output,
+        },
+      };
+
+      // 簡易比較表示（JSON diff）
+      alert(`比較結果:\n\nRun 1: ${run1.title}\nRun 2: ${run2.title}\n\n詳細はコンソールを確認してください。`);
+      console.log('[Compare] Comparison:', comparison);
+    }).catch((error) => {
+      console.error('[Compare] Error:', error);
+      alert(`比較に失敗しました: ${error.message || '不明なエラー'}`);
+    });
+  };
+
+
   if (!isRunDrawerOpen) {
     return null;
   }
@@ -226,87 +310,13 @@ export default function WorkflowOutputDetailDrawer() {
               </div>
               
               <WorkflowRunDetailView
-                runItem={runItem}
-                runPayload={runPayload}
-                onReuse={(runId) => {
-                  // 再利用: workflow_run_refノードを追加
-                  if (!activeWorkflow) {
-                    alert('ワークフローを選択してください');
-                    return;
-                  }
-                  
-                  const agentName = runPayload.agentDefinitionId || runItem.title.split(' - ')[0];
-                  const executedAt = new Date(runPayload.executedAt || runPayload.startedAt).toLocaleString('ja-JP');
-                  const displayName = `${agentName} @ ${executedAt}`;
-                  
-                  const newNode: InputNode = {
-                    id: `input-run-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-                    type: 'input',
-                    kind: 'knowledge',
-                    label: displayName,
-                    position: {
-                      x: Math.random() * 300 + 50,
-                      y: Math.random() * 300 + 50,
-                    },
-                    data: {
-                      inputKind: 'workflow_run_ref',
-                      refId: runId,
-                      refKind: 'workflow_run',
-                      title: displayName,
-                    },
-                    notes: `Run ID: ${runId}`,
-                  };
-                  
-                  addNode(newNode);
-                  alert(`「${displayName}」をInputノードとして追加しました`);
-                }}
-                onCompare={(runId) => {
-                  // 比較機能: 別のrunを選択して比較
-                  const compareRunId = prompt('比較する実行結果のIDを入力してください（または空欄でキャンセル）:');
-                  if (!compareRunId || compareRunId.trim() === '') {
-                    return;
-                  }
-                  
-                  // 簡易実装: 2つのrunを取得して比較表示
-                  Promise.all([
-                    fetch(`/api/kb/items/${runId}`).then(r => r.json()),
-                    fetch(`/api/kb/items/${compareRunId.trim()}`).then(r => r.json()),
-                  ]).then(([run1Data, run2Data]) => {
-                    const run1 = run1Data.item;
-                    const run2 = run2Data.item;
-                    
-                    // 比較結果を表示
-                    const comparison = {
-                      run1: {
-                        id: run1.kb_id,
-                        title: run1.title,
-                        output: (run1.payload as WorkflowRunPayload).finalOutput || (run1.payload as WorkflowRunPayload).output,
-                      },
-                      run2: {
-                        id: run2.kb_id,
-                        title: run2.title,
-                        output: (run2.payload as WorkflowRunPayload).finalOutput || (run2.payload as WorkflowRunPayload).output,
-                      },
-                    };
-                    
-                    // 簡易比較表示（JSON diff）
-                    alert(`比較結果:\n\nRun 1: ${run1.title}\nRun 2: ${run2.title}\n\n詳細はコンソールを確認してください。`);
-                    console.log('[Compare] Comparison:', comparison);
-                  }).catch((error) => {
-                    console.error('[Compare] Error:', error);
-                    alert(`比較に失敗しました: ${error.message || '不明なエラー'}`);
-                  });
-                }}
-                onExport={(runId) => {
-                  // エクスポート機能はWorkflowRunDetailView内で実装済み
-                  console.log('[WorkflowOutputDetailDrawer] Export requested:', runId);
-                }}
-                onRegenerate={(runId) => {
-                  // 再生成機能（今後実装）
-                  console.log('[WorkflowOutputDetailDrawer] Regenerate requested:', runId);
-                  alert('再生成機能は今後実装予定です');
-                }}
-              />
+  runItem={runItem}
+  runPayload={runPayload}
+  onReuse={onReuse}
+  onCompare={onCompare}
+  onExport={onExport}
+  onRegenerate={onRegenerate}
+/>
             </div>
           ) : (
             <div className="flex items-center justify-center h-full">
