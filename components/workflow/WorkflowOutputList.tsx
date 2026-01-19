@@ -226,7 +226,7 @@ export default function WorkflowOutputList({ activeWorkflow, isActive = false }:
             workflowRuns.push({
               id: normalized.id,
               title: (normalized as any).title,
-              payload: normalized.payload as any, // 念のためここもanyにしておくと安全です
+              payload: (normalized as any).payload as any,
               createdAt: normalized.createdAt,
               runItem: item,
               runPayload: normalized,
