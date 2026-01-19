@@ -227,7 +227,7 @@ export default function WorkflowOutputList({ activeWorkflow, isActive = false }:
               id: normalized.id,
               title: (normalized as any).title,
               payload: (normalized as any).payload as any,
-              createdAt: normalized.createdAt,
+              createdAt: (normalized as any).createdAt,
               runItem: item,
               runPayload: normalized,
               type: inferredOutputKind as 'lp_structure' | 'banner_structure',
