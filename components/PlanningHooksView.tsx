@@ -300,9 +300,9 @@ export default function PlanningHooksView({
                 </div>
 
                 {/* 企画フック */}
-                {payload.payload.hooks && payload.payload.hooks.length > 0 && (
-                  <div className="space-y-4">
-                    {payload.payload.hooks.map((h, hookIdx) => (
+                {(payload as any).payload.hooks && (payload as any).payload.hooks.length > 0 && (
+  <div className="space-y-4">
+    {(payload as any).payload.hooks.map((h: any, hookIdx: number) => (
                       <div
                         key={hookIdx}
                         className="border-l-4 pl-4 py-3 border-blue-500"
