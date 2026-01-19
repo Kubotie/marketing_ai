@@ -89,9 +89,9 @@ export default function WorkflowOutputDetailDrawer() {
               </h2>
               {runPayload && (
                 <span className={`px-2 py-1 text-xs font-medium rounded ${
-                  runPayload.status === 'completed' ? 'bg-green-100 text-green-700' :
-                  runPayload.status === 'failed' ? 'bg-red-100 text-red-700' :
-                  runPayload.status === 'running' ? 'bg-blue-100 text-blue-700' :
+                  (runPayload as any).status === 'completed' ? 'bg-green-100 text-green-700' :
+(runPayload as any).status === 'failed' ? 'bg-red-100 text-red-700' :
+(runPayload as any).status === 'running' ? 'bg-blue-100 text-blue-700' :
                   'bg-gray-100 text-gray-700'
                 }`}>
                   {runPayload.status === 'completed' ? '生成済' :
