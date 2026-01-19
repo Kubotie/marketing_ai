@@ -178,7 +178,7 @@ if (onOptionsUpdate) {
 
       // 自動保存
       try {
-        await saveKbItem('strategy_option', validated.data, {
+        await saveKbItem('strategy_option', validated.data as any, {
           title: `戦略オプション_${new Date().toLocaleDateString('ja-JP')}`,
           imageId,
           productId,
