@@ -292,10 +292,10 @@ export default function PlanningHooksView({
               <div key={idx} className="bg-white rounded-lg border p-6">
                 <div className="mb-4 flex items-center justify-between">
                   <div>
-                    <span className="text-lg font-semibold">{payload.payload.summary}</span>
-                    <span className="text-xs text-gray-500 ml-2">
-                      信頼度: {(payload.meta.confidence * 100).toFixed(0)}%
-                    </span>
+                  <span className="text-lg font-semibold">{(payload as any).payload.summary}</span>
+<span className="text-xs text-gray-500 ml-2">
+  信頼度: {((payload as any).meta.confidence * 100).toFixed(0)}%
+</span>
                   </div>
                 </div>
 
